@@ -441,4 +441,5 @@ window.closeDateModal = closeDateModal;
 window.confirmDate = confirmDate;
 window.closeTimeModal = closeTimeModal;
 window.selectTime = selectTime;
+
 window.filterCategory = filterCategory;
