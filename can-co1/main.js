@@ -22,7 +22,7 @@ const CATEGORIES = {
     'boissons': { name: 'Boissons', icon: '🥤' },
     'snacks': { name: 'Snacks', icon: '🍿' },
     'bonbons': { name: 'Bonbons', icon: '🍭' },
-    'autres': { name: 'Autres', icon: '📦' }
+    'lots': { name: 'Lots', icon: '📦' }
 };
 
 // Initialisation d'EmailJS
@@ -43,7 +43,7 @@ function renderProducts() {
     
     // Répartir les produits par catégorie
     products.forEach(product => {
-        const category = product.category || 'autres';
+        const category = product.category || 'lots';
         if (!productsByCategory[category]) {
             productsByCategory[category] = [];
         }
@@ -132,7 +132,7 @@ function renderAdminProducts() {
         
         const stockStatus = product.inStock ? 'En stock' : 'Rupture';
         const stockClass = product.inStock ? 'stock-available' : 'stock-unavailable';
-        const categoryInfo = CATEGORIES[product.category || 'autres'];
+        const categoryInfo = CATEGORIES[product.category || 'lots'];
         
         div.innerHTML = 
             `<div class="admin-product-info">
@@ -175,7 +175,7 @@ async function loadProducts() {
             id: doc.id, 
             ...doc.data(),
             inStock: doc.data().inStock !== undefined ? doc.data().inStock : true,
-            category: doc.data().category || 'autres' // Par défaut "autres" si pas de catégorie
+            category: doc.data().category || 'lots' // Par défaut "autres" si pas de catégorie
         }));
         renderProducts();
         renderAdminProducts();
