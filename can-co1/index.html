@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Can'&Co - La fraîcheur en un clic</title>
+    <style>
+        /*
+            *** TOUT VOTRE CSS (Styling) EST ICI ET NE CHANGE PAS ***
+        */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 80px;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 15px 40px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .slogan {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 300;
+            margin: 2px 0 0 0;
+            font-style: italic;
+        }
+
+        .admin-access {
+            margin-left: auto;
+        }
+
+        .admin-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #666;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 40px;
+        }
+
+        .products-section {
+            text-align: center;
+        }
+
+        .products-section h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 40px;
+            font-weight: 300;
+            background: linear-gradient(135deg, #000000, #1e1e1f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .category-section {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 400;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .category-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            justify-items: center;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Styles pour produits en rupture de stock */
+        .product-card.out-of-stock {
+            opacity: 0.7;
+            background: rgba(220, 220, 220, 0.95);
+        }
+
+        .product-card.out-of-stock:hover {
+            transform: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .out-of-stock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-radius: 15px;
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .product-price-original {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #999;
+            text-decoration: line-through;
+            margin: 0;
+        }
+
+        .product-price-promo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin: 0;
+        }
+
+        .product-price-normal {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 0;
+        }
+
+        .promo-badge {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        .stock-badge {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .add-to-cart-btn.disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .add-to-cart-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            margin: 10% auto;
+            padding: 0;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #e74c3c;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-body p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .time-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .time-option {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .time-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .time-option.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .time-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .time-option h4 {
+            margin: 10px 0 5px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .time-option p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .time-option small {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .calendar-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .date-picker {
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 300px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .date-picker:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .confirm-date-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .confirm-date-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: -100px;
+            right: 20px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(39, 174, 96, 0.3);
+            z-index: 3000;
+            min-width: 320px;
+            max-width: 400px;
+            transition: all 0.5s ease;
+        }
+
+        .notification.show {
+            top: 90px;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .notification-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .notification-message {
+            font-size: 1rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .notification-message .time-highlight {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #f1c40f;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .notification-message .casier-highlight {
+            font-weight: 700;
+            color: #f39c12;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 4000;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .admin-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .admin-header h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .admin-close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .admin-close:hover {
+            color: #e74c3c;
+        }
+
+        .admin-section {
+            margin-bottom: 40px;
+        }
+
+        .admin-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .product-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .admin-btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .admin-products-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .admin-product-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-product-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-product-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-stock, .btn-edit, .btn-delete {
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .btn-stock {
+            background: #3498db;
+        }
+
+        .btn-edit {
+            background: #f39c12;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+        }
+
+        .btn-stock:hover, .btn-edit:hover, .btn-delete:hover {
+            opacity: 0.8;
+        }
+
+        .stock-available {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .stock-unavailable {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/logo-canandco.png" alt="Can'&Co Logo" />
+            </div>
+            
+            <div class="brand-info">
+                <h1>Can'&Co</h1>
+                <p class="slogan">"La fraîcheur en un clic."</p>
+            </div>
+            
+            <div class="admin-access">
+                <button class="admin-btn" onclick="clickAdmin()">⚙️</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="products-section">
+            <h2>Nos Produits</h2>
+            
+            <!-- Filtres par catégorie -->
+            <div class="category-filter">
+                <button class="filter-btn active" onclick="filterCategory('all')">Tous</button>
+                <button class="filter-btn" onclick="filterCategory('boissons')">🥤 Boissons</button>
+                <button class="filter-btn" onclick="filterCategory('snacks')">🍿 Snacks</button>
+                <button class="filter-btn" onclick="filterCategory('bonbons')">🍭 Bonbons</button>
+                <button class="filter-btn" onclick="filterCategory('autres')">📦 Autres</button>
+            </div>
+
+            <div id="productsContainer">
+                <!-- Les catégories seront générées dynamiquement ici -->
+            </div>
+        </div>
+    </div>
+
+    <div id="dateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Choisir votre date de livraison</h3>
+                <span class="close-btn" onclick="closeDateModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Sélectionnez le jour où vous souhaitez recevoir votre commande :</p>
+                <div class="calendar-container">
+                    <input type="date" id="dateInput" class="date-picker">
+                    <button class="confirm-date-btn" onclick="confirmDate()">Confirmer la date</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="timeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="timeModalTitle">Choisir votre horaire</h3>
+                <span class="close-btn" onclick="closeTimeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Sélectionnez votre créneau :</p>
+                <div class="time-options">
+                    <div class="time-option" onclick="selectTime('9h55')">
+                        <div class="time-icon">🌅</div>
+                        <h4>Récré du matin</h4>
+                        <p>9h55 - 10h10</p>
+                    </div>
+                    <div class="time-option" onclick="selectTime('11h05')">
+                        <div class="time-icon">🍽️</div>
+                        <h4>Pause du midi</h4>
+                        <p>11h05 - 12h05<br><small>(Pendant la pause des 6e et 5e)</small></p>
+                    </div>
+                    <div class="time-option" onclick="selectTime('15h05')">
+                        <div class="time-icon">🌆</div>
+                        <h4>Récré du soir</h4>
+                        <p>15h05 - 15h20</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h2>🔧 Administration Can'&Co</h2>
+                <span class="admin-close" onclick="closeAdmin()">&times;</span>
+            </div>
+            
+            <div class="admin-section">
+                <h3>➕ Ajouter un produit</h3>
+                <div class="product-form">
+                    <div class="form-group">
+                        <label>Nom du produit</label>
+                        <input type="text" id="adminName" placeholder="Ex: Canette de Coca">
+                    </div>
+                    <div class="form-group">
+                        <label>Catégorie</label>
+                        <select id="adminCategory">
+                            <option value="boissons">🥤 Boissons</option>
+                            <option value="snacks">🍿 Snacks</option>
+                            <option value="bonbons">🍭 Bonbons</option>
+                            <option value="autres">📦 Autres</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Taille</label>
+                        <input type="text" id="adminSize" placeholder="Ex: 355mL">
+                    </div>
+                    <div class="form-group">
+                        <label>Prix normal ($)</label>
+                        <input type="number" id="adminPrice" step="0.01" placeholder="1.25">
+                    </div>
+                    <div class="form-group">
+                        <label>Prix promo ($)</label>
+                        <input type="number" id="adminPromo" step="0.01" placeholder="1.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Image (nom fichier)</label>
+                        <input type="text" id="adminImage" placeholder="coca.png">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="adminDescription" placeholder="Description...">
+                    </div>
+                </div>
+                <button class="admin-btn-primary" onclick="addProduct()">Ajouter le produit</button>
+            </div>
+            
+            <div class="admin-section">
+                <h3>📦 Produits existants</h3>
+                <div id="adminProductsList" class="admin-products-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <div class="notification-icon">✅</div>
+            <div class="notification-message" id="notifMessage"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="main.js"></script>
+
+    <footer>
+        <p>© 2025 Can&Co. Tous droits réservés.</p>
+    </footer>
+
+</body>
+</html>
